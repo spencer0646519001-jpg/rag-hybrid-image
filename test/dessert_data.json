@@ -1,0 +1,46 @@
+{
+  "泡芙": [
+    "舒服",
+    "大.creamy"
+  ],
+  "可麗露": [
+    "脆",
+    "酒香",
+    "黑"
+  ],
+  "乃烙": [
+    "kokoko"
+  ],
+  "souffle": [
+    "&",
+    "c:/users/spencer/anaconda3/envs/voice_ai_env/python.exe",
+    "c:/users/spencer/desktop/python_learning/json_search_test.py"
+  ],
+  "銅鑼燒": [
+    "日式",
+    "軟",
+    "紅豆"
+  ],
+  "發糕": [
+    "& c:/users/spencer/anaconda3/envs/voice_ai_env/python.exe c:/users/spencer/desktop/python_learning/json_search_test.py",
+    "小時候的味道",
+    "軟",
+    "舒服",
+    "甜",
+    "日式",
+    "紅豆"
+  ],
+  "蘋果派": [
+    "蘋果",
+    "酥",
+    "香甜"
+  ],
+  "發高": [
+    "黑糖"
+  ],
+  "黑糖糕": [
+    "黑糖",
+    "甜",
+    "鬆軟"
+  ]
+}

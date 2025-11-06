@@ -1,0 +1,118 @@
+[
+  {
+    "query": "pistachio macaron",
+    "positives": [
+      "pistachio_macaron.jpg"
+    ]
+  },
+  {
+    "query": "mont blanc chestnut",
+    "positives": [
+      "mont_blanc_chestnut.jpg"
+    ]
+  },
+  {
+    "query": "crepe suzette",
+    "positives": [
+      "crepe_suzette.jpg"
+    ]
+  },
+  {
+    "query": "matcha cream roll",
+    "positives": [
+      "matcha_cream_roll.jpg"
+    ]
+  },
+  {
+    "query": "financier",
+    "positives": [
+      "financier.jpg"
+    ]
+  },
+  {
+    "query": "lemone tarte1",
+    "positives": [
+      "lemone_tarte.jpg",
+      "lemone_tarte1.jpg"
+    ]
+  },
+  {
+    "query": "tiramisu classic",
+    "positives": [
+      "tiramisu_classic.jpg"
+    ]
+  },
+  {
+    "query": "lemone tarte",
+    "positives": [
+      "lemone_tarte.jpg",
+      "lemone_tarte1.jpg"
+    ]
+  },
+  {
+    "query": "mille feuille vanilla",
+    "positives": [
+      "mille_feuille_vanilla.jpg",
+      "vanilla_eclair.jpg"
+    ]
+  },
+  {
+    "query": "sugar ball sphere",
+    "positives": [
+      "sugar_ball_sphere.jpg"
+    ]
+  },
+  {
+    "query": "cheese cake",
+    "positives": [
+      "cheese_cake.jpg"
+    ]
+  },
+  {
+    "query": "mint chocolate mousse",
+    "positives": [
+      "chocolate_tart.jpg",
+      "mint_chocolate_mousse.jpg"
+    ]
+  },
+  {
+    "query": "chocolate tart",
+    "positives": [
+      "chocolate_tart.jpg",
+      "mint_chocolate_mousse.jpg"
+    ]
+  },
+  {
+    "query": "strawberry shortcake",
+    "positives": [
+      "strawberry_shortcake.jpg"
+    ]
+  },
+  {
+    "query": "vanilla eclair",
+    "positives": [
+      "coffee_eclair.jpg",
+      "mille_feuille_vanilla.jpg",
+      "vanilla_eclair.jpg"
+    ]
+  },
+  {
+    "query": "madeline framboise",
+    "positives": [
+      "madeline_framboise.jpg"
+    ]
+  },
+  {
+    "query": "canele",
+    "positives": [
+      "canele.jpg"
+    ]
+  },
+  {
+    "query": "coffee eclair",
+    "positives": [
+      "coffee_eclair.jpg",
+      "vanilla_eclair.jpg"
+    ]
+  }
+]

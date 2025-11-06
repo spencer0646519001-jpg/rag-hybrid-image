@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+rapidfuzz
+numpy
+pillow
+imagehash
+sentence-transformers
+openai>=1.30.0

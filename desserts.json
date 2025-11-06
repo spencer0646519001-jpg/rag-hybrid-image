@@ -1,0 +1,44 @@
+[
+  {
+    "id": "d1",
+    "title": "抹茶草莓塔的穩定出品參數",
+    "tags": ["塔皮", "抹茶", "草莓", "乳化", "溫度曲線"],
+    "snippet": "塔皮水活性控制在 0.55–0.60；甘納許乳化最佳溫域 34–36°C。草莓含水高時先刷可可脂薄層。",
+    "lang": "zh"
+  },
+  {
+    "id": "d2",
+    "title": "焦糖布丁孔洞的根因分析",
+    "tags": ["布丁", "蒸烤", "氣泡", "孔洞", "低溫長時"],
+    "snippet": "常見原因：過度攪拌或溫度過高。建議 150°C/45 分，水浴 80–85°C，液體過篩兩次。",
+    "lang": "zh"
+  },
+  {
+    "id": "d3",
+    "title": "Raspberry macaron shell cracks checklist",
+    "tags": ["macaron", "crack", "drying", "bake curve"],
+    "snippet": "If humidity >60%, extend drying to 30–45 min. Bake 135–150°C, adjust top/bottom heat as needed.",
+    "lang": "en"
+  },
+  {
+    "id": "d4",
+    "title": "Chocolate glaze troubleshooting",
+    "tags": ["glaze", "shine", "viscosity"],
+    "snippet": "Streaking often comes from over-emulsification or wrong temp; aim for 34–36°C when pouring.",
+    "lang": "en"
+  },
+  {
+    "id": "d5",
+    "title": "マカロン殻のひび割れ対策リスト",
+    "tags": ["マカロン", "乾燥時間", "焼成カーブ"],
+    "snippet": "湿度が60%を超える場合、表面乾燥を30–45分に延長。135–150°Cで焼成、上火/下火を調整。",
+    "lang": "ja"
+  },
+  {
+    "id": "d6",
+    "title": "抹茶ガナッシュの乳化温度",
+    "tags": ["ガナッシュ", "乳化", "温度"],
+    "snippet": "最適乳化帯は34–36°C。分離時は少量ずつ液体を足して再乳化。",
+    "lang": "ja"
+  }
+]

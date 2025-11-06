@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAG 甜點知識庫 – 搜尋</title>
+  <style>
+    :root{
+      --bg1:#FFF7D1;--bg2:#FFD977;--bg3:#FFBD4A;
+      --ink:#222;--muted:#666;--card:rgba(255,255,255,.85);--radius:14px;
+    }
+    html,body{height:100%;margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","Hiragino Sans","Microsoft JhengHei",Arial,sans-serif;background:linear-gradient(120deg,var(--bg1),var(--bg2) 40%,var(--bg3))}
+    .wrap{max-width:980px;margin:40px auto;padding:0 20px}
+    .head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+    .logo{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#000;color:#fff;font-weight:700}
+    h1{margin:0;font-size:20px;letter-spacing:.5px}
+    .bar{display:flex;gap:10px;align-items:center;background:var(--card);backdrop-filter:blur(6px);border:1px solid #0002;border-radius:var(--radius);padding:10px 12px;margin-bottom:12px}
+    input[type="text"],select{border:1px solid #0002;border-radius:10px;padding:10px 12px;font-size:14px;outline:none;background:#fff}
+    input[type="text"]{flex:1}
+    button{border:1px solid #0003;background:#000;color:#fff;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+    .opts{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:13px;margin:12px 0 10px}
+    .range{display:flex;align-items:center;gap:8px}
+    .filters{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+    .filters input{flex:1}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+    .card{background:var(--card);backdrop-filter:blur(6px);border:1px solid #0002;border-radius:var(--radius);padding:14px}
+    .score{font-size:12px;color:var(--muted);margin-bottom:6px}
+    .title{font-weight:700;margin-bottom:6px}
+    .snippet{font-size:14px;line-height:1.5;color:#222;margin-bottom:10px}
+    .tags{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{font-size:11px;padding:4px 8px;border:1px solid #0002;border-radius:999px;background:#fff8}
+    mark{background:#ffe08a;padding:0 .1em;border-radius:3px}
+    .tip{font-size:12px;color:var(--muted);margin-left:auto}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <div class="logo">R</div>
+      <h1>RAG 甜點知識庫</h1>
+    </div>
+
+    <!-- 搜尋列 -->
+    <div class="bar">
+      <input id="q" type="text" placeholder="輸入關鍵字（可逗號分多詞；例：抹茶, macaron）" />
+      <select id="mic-lang" title="語音語言">
+        <option value="zh-TW">中文（台灣）</option>
+        <option value="en-US">English (US)</option>
+        <option value="ja-JP">日本語</option>
+      </select>
+      <button id="mic" title="語音輸入">🎙️</button>
+      <button id="go">搜尋</button>
+      <span id="live" class="sr-only" aria-live="polite"></span>
+    </div>
+
+    <!-- 篩選/選項 -->
+    <div class="opts">
+      <div class="range">
+        <span>最低分數</span>
+        <input id="min" type="range" min="0" max="100" step="1" value="15" />
+        <span id="minv">15</span>
+      </div>
+      <div class="range">
+        <span>顯示筆數</span>
+        <input id="k" type="range" min="1" max="10" step="1" value="5" />
+        <span id="kv">5</span>
+      </div>
+      <span class="tip">支援中/英/日；大小寫不敏感；亂序可命中</span>
+    </div>
+
+    <!-- 標籤篩選（前端過濾） -->
+    <div class="filters">
+      <input id="tags" type="text" placeholder="標籤（可逗號分隔；例：抹茶, 乳化）" />
+      <button id="clear">清除篩選</button>
+    </div>
+
+    <div id="list" class="cards"></div>
+  </div>
+
+  <script>
+    const qs = sel => document.querySelector(sel);
+    const qI   = qs('#q'),    minI = qs('#min'), kI = qs('#k');
+    const minV = qs('#minv'), kV   = qs('#kv');
+    const list = qs('#list'), live = qs('#live');
+    const tagsI = qs('#tags');
+
+    minI.addEventListener('input', () => minV.textContent = minI.value);
+    kI.addEventListener('input',   () => kV.textContent   = kI.value);
+    qs('#clear').addEventListener('click', () => { tagsI.value=''; runSearch(); });
+
+    function highlight(text, terms){
+      if (!text) return '';
+      const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const words = terms.filter(t=>t).map(esc);
+      if (!words.length) return text;
+      const re = new RegExp("(" + words.join("|") + ")", "gi");
+      return text.replace(re, "<mark>$1</mark>");
+    }
+
+    function parseTags(){
+      return tagsI.value
+        .split(/[,\s]+/)
+        .map(s=>s.trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    function filterByTags(items, tagTerms){
+      if (!tagTerms.length) return items;
+      return items.filter(d=>{
+        const hay = (d.tags || []).join(" ").toLowerCase();
+        return tagTerms.every(t => hay.includes(t));
+      });
+    }
+
+    async function runSearch(){
+      const q = qI.value.trim();
+      if (!q){ list.innerHTML = ""; live.textContent="已清空搜尋"; return; }
+
+      const params = new URLSearchParams({ q, k: kI.value, min_score: minI.value });
+      const url = `http://127.0.0.1:8000/search?${params.toString()}`;
+      list.innerHTML = '<div class="card">搜尋中…</div>';
+      try{
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(res.statusText);
+        let data = await res.json();
+
+        const terms = q.split(/[,\s]+/).filter(Boolean);
+        const tagTerms = parseTags();
+        data = filterByTags(data, tagTerms);
+
+        if (!data.length){ list.innerHTML = '<div class="card">（沒有命中）</div>'; live.textContent="沒有命中"; return; }
+
+        list.innerHTML = data.map(d=>`
+          <div class="card">
+            <div class="score">score ${d.score.toFixed(0)}</div>
+            <div class="title">${highlight(d.title, terms)}</div>
+            <div class="snippet">${highlight(d.snippet, terms)}</div>
+            <div class="tags">
+              ${(d.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
+              <span class="tag">語言：${d.lang}</span>
+            </div>
+          </div>
+        `).join('');
+        live.textContent = `顯示 ${data.length} 筆結果`;
+      }catch(err){
+        list.innerHTML = `<div class="card">發生錯誤：${err.message}</div>`;
+        live.textContent = '發生錯誤';
+      }
+    }
+
+    qs('#go').addEventListener('click', runSearch);
+    qI.addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+    tagsI.addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+
+    // 初始值
+    qI.value = "抹茶, macaron";
+    runSearch();
+
+    // --- 語音輸入（Web Speech API） ---
+    (function(){
+      const Mic = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const micBtn = document.querySelector('#mic');
+      const micLangSel = document.querySelector('#mic-lang');
+
+      if (!Mic){ micBtn.disabled=true; micBtn.title='此瀏覽器不支援語音輸入'; return; }
+
+      let recognizing=false, recognition;
+
+      function initRecognizer(){
+        recognition = new Mic();
+        recognition.lang = micLangSel.value;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = ()=>{
+          recognizing = true; micBtn.textContent='🛑'; micBtn.title='停止語音輸入';
+        };
+        recognition.onerror = (e)=>{
+          recognizing = false; micBtn.textContent='🎙️'; micBtn.title='語音輸入';
+          console.warn('speech error:', e.error);
+          alert('語音辨識發生錯誤：' + e.error);
+        };
+        recognition.onend = ()=>{
+          recognizing = false; micBtn.textContent='🎙️'; micBtn.title='語音輸入';
+        };
+        recognition.onresult = (evt)=>{
+          const res = evt.results[evt.results.length-1];
+          if (!res) return;
+          const transcript = res[0].transcript.trim();
+          if (transcript){
+            qI.value = transcript;
+            if (res.isFinal) runSearch();
+          }
+        };
+      }
+
+      initRecognizer();
+
+      micLangSel.addEventListener('change', ()=>{
+        if (recognizing && recognition) recognition.stop();
+        initRecognizer();
+      });
+
+      micBtn.addEventListener('click', ()=>{
+        if (!recognition) return;
+        if (recognizing){
+          recognition.stop();
+        }else{
+          try{
+            recognition.lang = micLangSel.value;
+            recognition.start();
+          }catch(err){
+            console.error(err);
+            alert('無法啟動語音：' + err.message);
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

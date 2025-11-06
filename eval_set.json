@@ -1,0 +1,36 @@
+[
+  {
+    "query": "檸檬塔",
+    "positives": ["lemone_tarte.jpg", "lemone_tarte1.jpg"]
+  },
+  {
+    "query": "抹茶捲",
+    "positives": ["matcha_cream_roll.jpg"]
+  },
+  {
+    "query": "草莓蛋糕",
+    "positives": [ "strawberry_shortcake.jpg"]
+  },
+  {
+    "query": "可麗露,canel",
+    "positives": [ "canele.jpg"]
+  },
+  {
+    "query": "巧克力塔,chocolate tarte",
+    "positives": [ "chocolate_tart.jpg"]
+  },
+  {
+    "query": "financier,費南雪",
+    "positives": [ "financier.jpg"]
+  },
+  {
+    "query": "cheese_cake,起司蛋糕",
+    "positives": [ "cheese_cake.jpg"]
+  }
+
+
+
+
+]
+
+
