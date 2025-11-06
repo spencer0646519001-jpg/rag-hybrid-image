@@ -71,6 +71,18 @@ python experiments/hybrid/plot_weights.py
 CLIP Vector Only	1.0	0.0	0.72	0.90	0.88
 Hybrid (BM25 + CLIP)	0.7	0.3	0.84	0.95	0.93
 
+## 📊 Weight Sweep 結果
+- 掃描權重：w_vec ∈ {0.5, 0.6, 0.7, 0.8, 0.9}（w_text = 1 - w_vec）
+- 最佳權重（Hit@1 / nDCG / MRR）：**w_vec = 0.5**
+
+![Hit@1 vs w_vec](experiments/hybrid/weight_hit1.png)
+![nDCG@5 vs w_vec](experiments/hybrid/weight_ndcg.png)
+![MRR vs w_vec](experiments/hybrid/weight_mrr.png)
+
+> 逐權重彙整：`experiments/hybrid/sweep_summary.csv`  
+> 個別結果：`experiments/hybrid/results_w0.5.csv` 等
+
+
 📈 Hybrid 模式在 Top-1 準確率與整體排序表現皆優於單一向量搜尋。
 
 🌐 系統設計邏輯
@@ -101,4 +113,5 @@ Language: Python 3.13
 Frameworks: SentenceTransformers, Rank-BM25, NumPy, Matplotlib
 Date: 2025-11
 License: MIT﻿# rag-hybrid-image
+
 
