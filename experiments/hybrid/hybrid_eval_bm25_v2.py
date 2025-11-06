@@ -15,7 +15,7 @@ EMB_PATH  = ROOT / "data" / "img_embeddings.npy"
 META_PATH = ROOT / "data" / "image_index.json"
 
 print(f"[DEBUG] EMB path:  {EMB_PATH}")
-print(f"[DEBUG] META path: {META_PATH}")
+print(f"[DEBUG] META path: {META_PATH}")    
 
 
 # ====== 2) 讀 embeddings ======
